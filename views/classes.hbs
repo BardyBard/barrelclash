@@ -1,0 +1,49 @@
+{{!-- show some conformations of actions upon being redicted --}}
+{{#if created}}
+<div class="alert alert-success">
+    <strong>Successfully added Class!</strong>
+</div>
+{{/if}}
+
+{{#if deleted}}
+<div class="alert alert-danger">
+    <strong>Deleted class</strong>
+</div>
+{{/if}}
+
+
+<div class="container">
+    {{!-- only add button if privleged for action --}}
+    {{#if admin}}
+    <div class="col mt-3">
+        <a class="btn btn-warning btn-lg mt-3" href="/classes/create" role="button">Add New Class</a>
+    </div>
+    {{/if}}
+
+    <div class="card-columns mt-3 justify-content-center">
+        {{!-- make card for each class --}}
+        <div class="col">
+            {{!-- verify there is data --}}
+            {{#unless data}}
+            <div class="alert alert-danger">
+                <strong>There are no classes</strong>
+            </div>
+            {{/unless}}
+
+            {{!-- loop through data --}}
+            {{#each data}}
+            <div class="card bg-warning text-dark mt-3" style="width: 18rem;">
+                <div class="card-body">
+                    <h3 class="card-title">{{name}}</h3>
+                    <a href="/classes/{{name}}" class="stretched-link"></a>
+                </div>
+                {{!-- <ul class="list-group list-group-flush">
+                    <li class="list-group-item bg-warning text-dark"><a href="/">hehehehe</a></li>
+                    <li class="list-group-item bg-warning text-dark">Dapibus ac facilisis in</li>
+                    <li class="list-group-item bg-warning text-dark">Vestibulum at eros</li>
+                </ul> --}}
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+<title>{{clas}}</title>
+
+<div class="container">
+    <div class="row mt-3 justify-content-left">
+        <div class="col">
+            {{!-- make sure there are classes --}}
+            {{#unless data}}
+            <div class="alert alert-danger">
+                <strong>There are no tasks for this class</strong>
+            </div>
+            {{/unless}}
+
+            {{!-- loop through classes data--}}
+            {{#each data}}
+            <div class="card text-dark bg-warning mb-3" style="width: 32rem;">
+                <div class="card-header">{{subject}} | {{category}}</div>
+                <div class="card-body">
+                    <h3 class="card-title">{{title}}</h3>
+                    <p class="card-text">{{formatDate date}}</p>
+                    <a href="/tasks/{{_id}}" class="stretched-link"></a>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        {{!-- only add button if privleged for action --}}
+        {{#if admin}}
+        <div class="col">
+            <a class="btn btn-warning btn-lg" href="/tasks/upload" role="button">Create New Task</a>
+            <a class="btn btn-danger" href="/classes/delete/{{clas}}" role="button">Delete Class</a>
+        </div>
+        {{/if}}
+    </div>
+</div>
