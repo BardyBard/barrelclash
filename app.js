@@ -5,9 +5,7 @@ const session = require('express-session');
 
 //require routers from my modules
 const indexRoutes = require('./routes/index');
-const classesRoutes = require('./routes/classes');
-const tasksRoutes = require('./routes/tasks');
-const accountRoutes = require('./routes/account');
+const gameRoutes = require('./routes/game');
 const uuid = require('uuid').v4;
 
 const app = express();
@@ -34,9 +32,7 @@ app.use(session({
 }))
 
 //declare routers
-app.use(tasksRoutes);
-app.use(classesRoutes);
-app.use(accountRoutes);
+app.use(gameRoutes);
 app.use(indexRoutes);
 
 module.exports = app;
