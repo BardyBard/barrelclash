@@ -1,46 +1,53 @@
-
-
-
-!<div id="target" class="embed-responsive embed-responsive-21by9">
-    <iframe src="/videos/B5.mp4"></iframe>
-    <div id="thing" class="card">
-        <div class="card-body">
-            This is some text within a card body.
+<div id="target">
+    {{!-- <div class="embed-responsive embed-responsive-21by9">
+        <iframe src="/videos/B5.mp4"></iframe>
+        <div id="thing" class="card">
+            <div class="card-body">
+                This is some text within a card body.
+            </div>
         </div>
-    </div>
-</div>
-
-<div id="thing2" class="newthing">
-    <p>trolololololololo</p>
-    <p>trolololololololo</p>
-    <p>trolololololololo</p>
-    <p>First Paragraph</p>
-    <p>Second Paragraph</p>
-    <p>Yet one more Paragraph</p>
+    </div> --}}
 </div>
 
 <script>
-    $("#target").click(function () {
-        alert("lol")
+    // Create video element
+    const video = document.createElement('video');
+    video.src = '/videos/B5.mp4';
+
+    video.controls = false;
+    video.muted = false;
+    video.autoplay = true;
+    video.height = screen.height - screen.height / 30; // in px
+    css(video, {
+        'margin-left': 'auto',
+        'margin-right': 'auto',
+        'width': '100%'
     });
+
+    const target = document.getElementById('target');
+
+    // Include in HTML as child of #box
+    target.appendChild(video);
+
+    $("#target").click(function () {
+        alert(`${event.pageX / screen.height/2.167}, ${event.pageY / (screen.height)}`)
+    });
+
+    function css(element, style) {
+        for (const property in style)
+            element.style[property] = style[property];
+    }
 </script>
 
 
-
 <script>
-    /*$("thing").click(function () {
-        alert("lol")
-    });
-    /*
-    (function () {
+    /*(function () {
         "use strict";
         document.onmousemove = handleMouseMove;
         function handleMouseMove(event) {
             var dot, eventDoc, doc, body, pageX, pageY;
             event = event || window.event; // IE-ism
-            // If pageX/Y aren't available and clientX/Y
-            // are, calculate pageX/Y - logic taken from jQuery
-            // Calculate pageX/Y if missing and clientX/Y available
+            // If pageX/Y aren't available and clientX/Y are, calculate pageX/Y - logic taken from jQuery Calculate pageX/Y if missing and clientX/Y available
             if (event.pageX == null && event.clientX != null) {
                 eventDoc = (event.target && event.target.ownerDocument) || document;
                 doc = eventDoc.documentElement;
