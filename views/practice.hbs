@@ -1,71 +1,56 @@
-<div id="target">
-    {{!-- <div class="embed-responsive embed-responsive-21by9">
-        <iframe src="/videos/B5.mp4"></iframe>
-        <div id="thing" class="card">
-            <div class="card-body">
-                This is some text within a card body.
-            </div>
-        </div>
-    </div> --}}
-</div>
+<div id="target"></div>
 
 <script>
+    //load data values
+    squareX = new Map([
+        [""]
+    ])
+    squareY = new Map([
+        [69, "A"],2.42
+        [71.428, "B"], 2.416
+        [73.844, "C"], 2.20
+        [76.05, "D"],2.20
+        [78.99, "E"], 2.1
+        [81.092, "F"], 
+        [83.446, "G"],
+        [85.88, "H"],
+        [88.403, "I"]
+    ])
+
+
     // Create video element
     const video = document.createElement('video');
-    video.src = '/videos/B5.mp4';
+    video.src = '/videos/out2.mp4';
 
     video.controls = false;
     video.muted = false;
     video.autoplay = true;
-    video.height = screen.height - screen.height / 30; // in px
+    video.height = window.innerHeight; // in px
     css(video, {
+        'display': 'block',
         'margin-left': 'auto',
         'margin-right': 'auto',
-        'width': '100%'
     });
 
     const target = document.getElementById('target');
-
     // Include in HTML as child of #box
     target.appendChild(video);
 
-    $("#target").click(function () {
-        alert(`${event.pageX / screen.height/2.167}, ${event.pageY / (screen.height)}`)
-    });
+    video.addEventListener('mousedown', function (e) {
+            // Get the target
+            e.target;
+            // Get the bounding rectangle of target
+            const rect = e.target.getBoundingClientRect();
+            const len = rect.right-rect.left;
+            const height = rect.bottom-rect.top;
 
+            // Mouse position
+            const x = (e.clientX - rect.left)/len*100;
+            const y = (e.clientY - rect.top)/height*100;
+            alert(`${x}%, and ${y}%`)
+        });
     function css(element, style) {
         for (const property in style)
             element.style[property] = style[property];
     }
-</script>
-
-
-<script>
-    /*(function () {
-        "use strict";
-        document.onmousemove = handleMouseMove;
-        function handleMouseMove(event) {
-            var dot, eventDoc, doc, body, pageX, pageY;
-            event = event || window.event; // IE-ism
-            // If pageX/Y aren't available and clientX/Y are, calculate pageX/Y - logic taken from jQuery Calculate pageX/Y if missing and clientX/Y available
-            if (event.pageX == null && event.clientX != null) {
-                eventDoc = (event.target && event.target.ownerDocument) || document;
-                doc = eventDoc.documentElement;
-                body = eventDoc.body;
-
-                event.pageX = event.clientX +
-                    (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
-                    (doc && doc.clientLeft || body && body.clientLeft || 0);
-                event.pageY = event.clientY +
-                    (doc && doc.scrollTop || body && body.scrollTop || 0) -
-                    (doc && doc.clientTop || body && body.clientTop || 0);
-            }
-            // Add a dot to follow the cursor
-            dot = document.createElement('div');
-            dot.className = "dot";
-            dot.style.left = event.pageX + "px";
-            dot.style.top = event.pageY + "px";
-            document.body.appendChild(dot);
-        }
-    })();*/
 </script>
