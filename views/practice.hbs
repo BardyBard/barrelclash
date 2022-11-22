@@ -5,17 +5,19 @@
     squareX = new Map([
         [""]
     ])
-    squareY = new Map([
+    /*squareY = new Map([
         [69, "A"],2.42
         [71.428, "B"], 2.416
         [73.844, "C"], 2.20
         [76.05, "D"],2.20
         [78.99, "E"], 2.1
-        [81.092, "F"], 
-        [83.446, "G"],
-        [85.88, "H"],
+        [81.092, "F"],  2.35
+        [83.446, "G"], 2.43
+        [85.88, "H"], 2.52
         [88.403, "I"]
-    ])
+    ])*/
+
+    //90.71-56.7226)/14 =
 
 
     // Create video element
@@ -47,7 +49,7 @@
             // Mouse position
             const x = (e.clientX - rect.left)/len*100;
             const y = (e.clientY - rect.top)/height*100;
-            alert(`${x}%, and ${y}%`)
+            alert(`${e.clientY - rect.top}%, and ${height}%`)
         });
     function css(element, style) {
         for (const property in style)
