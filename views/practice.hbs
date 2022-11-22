@@ -1,64 +1,104 @@
-<div id="target"></div>
+<div id='container' class="container">
+    <div class="text-center mt-5 pt-5">
+        <button id="start" type="button" class="btn btn-secondary btn-lg">Start Pracice</button>
+    </div>
+    <div class="card mx-auto m-3 text-white bg-secondary" style="width: 18rem">
+        <div class="card-body text-center"> Best Score: </div>
+    </div>
+    <div class="text-center m-5">
+        <a class="btn btn-secondary" href="/" role="button">home</a>
+    </div>
+</div>
+<div id="target" class="container"></div>
 
 <script>
-    //load data values
-    squareX = new Map([
-        [""]
-    ])
-    squareY = [[68.9844, "A"],
-    [71.4431, "B"],
-    [73.9019, "C"],
-    [76.3607, "D"],
-    [78.8195, "E"],
-    [81.2783, "F"],
-    [83.737, "G"],
-    [86.1958, "H"],
-    [88.6546, "I"],
-    [91.1134, "END"]]
+    //single square width=58.89px=5.45278%
+    //left left square = 10
+    //right right square = 1070
+    //total = 1080
 
     //single square height=48.143px=2.45878%
     //bottom river = 1110
     //bottom field end = 1784
     //total = 1958
 
+    //load data values
+    squareY = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
+    
+    //sample video
+    position = 'C3.mp4'.split('',2);
+    console.log(position)
+    position[0] = squareY.indexOf(position[0])+1;
 
 
-    // Create video element
-    const video = document.createElement('video');
-    video.src = '/videos/out2.mp4';
+    //check for game start
+    document.getElementById("start").onclick = function (event) {
+        let deletable = document.getElementById("container")
+        deletable.remove();
 
-    video.controls = false;
-    video.muted = false;
-    video.autoplay = true;
-    video.height = window.innerHeight; // in px
-    css(video, {
-        'display': 'block',
-        'margin-left': 'auto',
-        'margin-right': 'auto',
-    });
+        // Create video element
+        const video = document.createElement('video');
+        video.src = '/videos/out2.mp4';
+        video.controls = false;
+        video.muted = false;
+        video.autoplay = true;
+        const wx = window.innerWidth;
+        const wy = window.innerHeight;
+        if (wx / wy < 0.555) { video.width = window.innerWidth; }
+        else { video.height = window.innerHeight; }
 
-    const target = document.getElementById('target');
-    // Include in HTML as child of #box
-    target.appendChild(video);
 
-    video.addEventListener('mousedown', function (e) {
-        // Get the target
-        e.target;
-        // Get the bounding rectangle of target
-        const rect = e.target.getBoundingClientRect();
-        const len = rect.right - rect.left;
-        const height = rect.bottom - rect.top;
+        css(video, {
+            'display': 'block',
+            'margin-left': 'auto',
+            'margin-right': 'auto',
+        });
+        //create exit button
+        const exit = document.createElement('a');
+        exit.textContent = "Exit";
+        exit.className = "btn btn-danger";
+        exit.role = "button";
+        exit.href = "/";
+        css(exit, {
+            'position': 'absolute',
+            'right': '30px',
+            'top': '15px',
+        });
 
-        // Mouse position
-        const x = (e.clientX - rect.left) / len * 100;
-        const y = (e.clientY - rect.top) / height * 100;
+        // Include in HTML as child of target
+        const target = document.getElementById('target');
+        target.appendChild(video);
+        target.appendChild(exit);
 
-        for (const i = 0; i< squareY.length-1; i++) {
-            console.log(element);
-            //Do something
-        }
-        alert(`${x}%, and ${y}%`)
-    });
+        video.addEventListener('mousedown', function (e) {
+            // Get the target
+            e.target;
+            // Get the bounding rectangle of target
+            const rect = e.target.getBoundingClientRect();
+            const len = rect.right - rect.left;
+            const height = rect.bottom - rect.top;
+
+            // Mouse position
+            const x = (e.clientX - rect.left) / len * 100;
+            const y = (e.clientY - rect.top) / height * 100;
+
+            //turn co-ordinates into square
+            let pos = [];
+            let yindex = Math.floor((y - 68.9844) / 2.45878);
+            if (yindex >= 0 && yindex < 9) {
+                //pos.push(squareY[yindex])
+                pos.push(yindex+1)
+                let xindex = Math.floor((x - 0.9259) / 5.45278);
+                if (xindex >= 0 && xindex < 18) { pos.push(xindex+1) }
+            }  
+            console.log(`${pos[0]} - ${position[0]}, ${pos[1]} - ${position[1]} `)
+            let score = 100 - 20*(Math.abs(pos[0]-position[0]) + Math.abs(pos[1]-position[1]));
+            if (!(score > 0)) {score=0}
+            alert(`${pos}, Your score is ${score}`)
+        });
+    }
+
+    //function to help apply ccs to elements
     function css(element, style) {
         for (const property in style)
             element.style[property] = style[property];
