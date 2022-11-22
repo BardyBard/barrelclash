@@ -5,19 +5,22 @@
     squareX = new Map([
         [""]
     ])
-    /*squareY = new Map([
-        [69, "A"],2.42
-        [71.428, "B"], 2.416
-        [73.844, "C"], 2.20
-        [76.05, "D"],2.20
-        [78.99, "E"], 2.1
-        [81.092, "F"],  2.35
-        [83.446, "G"], 2.43
-        [85.88, "H"], 2.52
-        [88.403, "I"]
-    ])*/
+    squareY = [[68.9844, "A"],
+    [71.4431, "B"],
+    [73.9019, "C"],
+    [76.3607, "D"],
+    [78.8195, "E"],
+    [81.2783, "F"],
+    [83.737, "G"],
+    [86.1958, "H"],
+    [88.6546, "I"],
+    [91.1134, "END"]]
 
-    //90.71-56.7226)/14 =
+    //single square height=48.143px=2.45878%
+    //bottom river = 1110
+    //bottom field end = 1784
+    //total = 1958
+
 
 
     // Create video element
@@ -39,18 +42,23 @@
     target.appendChild(video);
 
     video.addEventListener('mousedown', function (e) {
-            // Get the target
-            e.target;
-            // Get the bounding rectangle of target
-            const rect = e.target.getBoundingClientRect();
-            const len = rect.right-rect.left;
-            const height = rect.bottom-rect.top;
+        // Get the target
+        e.target;
+        // Get the bounding rectangle of target
+        const rect = e.target.getBoundingClientRect();
+        const len = rect.right - rect.left;
+        const height = rect.bottom - rect.top;
 
-            // Mouse position
-            const x = (e.clientX - rect.left)/len*100;
-            const y = (e.clientY - rect.top)/height*100;
-            alert(`${e.clientY - rect.top}%, and ${height}%`)
-        });
+        // Mouse position
+        const x = (e.clientX - rect.left) / len * 100;
+        const y = (e.clientY - rect.top) / height * 100;
+
+        for (const i = 0; i< squareY.length-1; i++) {
+            console.log(element);
+            //Do something
+        }
+        alert(`${x}%, and ${y}%`)
+    });
     function css(element, style) {
         for (const property in style)
             element.style[property] = style[property];
