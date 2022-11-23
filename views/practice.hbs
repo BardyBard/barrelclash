@@ -3,7 +3,7 @@
         <button id="start" type="button" class="btn btn-secondary btn-lg">Start Pracice</button>
     </div>
     <div class="card mx-auto m-3 text-white bg-secondary" style="width: 18rem">
-        <div class="card-body text-center"> Best Score: </div>
+        <div class="card-body text-center">Best Score: {{{bestscore}}}<br>Previous Game: {{{score}}}</div>
     </div>
     <div class="text-center m-5">
         <a class="btn btn-secondary" href="/" role="button">home</a>
@@ -24,35 +24,10 @@
 
     //load data values
     squareY = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
-    
-    //sample video
-    position = 'C3.mp4'.split('',2);
-    console.log(position)
-    position[0] = squareY.indexOf(position[0])+1;
-
-
+    console.log();
     //check for game start
     document.getElementById("start").onclick = function (event) {
-        let deletable = document.getElementById("container")
-        deletable.remove();
-
-        // Create video element
-        const video = document.createElement('video');
-        video.src = '/videos/out2.mp4';
-        video.controls = false;
-        video.muted = false;
-        video.autoplay = true;
-        const wx = window.innerWidth;
-        const wy = window.innerHeight;
-        if (wx / wy < 0.555) { video.width = window.innerWidth; }
-        else { video.height = window.innerHeight; }
-
-
-        css(video, {
-            'display': 'block',
-            'margin-left': 'auto',
-            'margin-right': 'auto',
-        });
+        document.getElementById("container").remove();
         //create exit button
         const exit = document.createElement('a');
         exit.textContent = "Exit";
@@ -67,40 +42,106 @@
 
         // Include in HTML as child of target
         const target = document.getElementById('target');
-        target.appendChild(video);
         target.appendChild(exit);
 
-        video.addEventListener('mousedown', function (e) {
-            // Get the target
-            e.target;
-            // Get the bounding rectangle of target
-            const rect = e.target.getBoundingClientRect();
-            const len = rect.right - rect.left;
-            const height = rect.bottom - rect.top;
-
-            // Mouse position
-            const x = (e.clientX - rect.left) / len * 100;
-            const y = (e.clientY - rect.top) / height * 100;
-
-            //turn co-ordinates into square
-            let pos = [];
-            let yindex = Math.floor((y - 68.9844) / 2.45878);
-            if (yindex >= 0 && yindex < 9) {
-                //pos.push(squareY[yindex])
-                pos.push(yindex+1)
-                let xindex = Math.floor((x - 0.9259) / 5.45278);
-                if (xindex >= 0 && xindex < 18) { pos.push(xindex+1) }
-            }  
-            console.log(`${pos[0]} - ${position[0]}, ${pos[1]} - ${position[1]} `)
-            let score = 100 - 20*(Math.abs(pos[0]-position[0]) + Math.abs(pos[1]-position[1]));
-            if (!(score > 0)) {score=0}
-            alert(`${pos}, Your score is ${score}`)
-        });
+        let score = 0;
+        let round = 1;
+        game(document, target, score, round);
     }
 
     //function to help apply ccs to elements
     function css(element, style) {
         for (const property in style)
             element.style[property] = style[property];
+    }
+
+    function game(doc, tar, score, round) {
+        //create countdown element
+        const countdown = doc.createElement('video');
+        countdown.src = '/videos/countdown.mp4';
+        countdown.controls = false;
+        countdown.muted = false;
+        countdown.autoplay = true;
+        const wx = window.innerWidth;
+        const wy = window.innerHeight;
+        if (wx / wy < 0.555) { countdown.width = window.innerWidth; }
+        else { countdown.height = window.innerHeight; }
+
+        css(countdown, {
+            'display': 'block',
+            'margin-left': 'auto',
+            'margin-right': 'auto',
+        });
+        tar.appendChild(countdown);
+
+        countdown.onended = function () {
+            countdown.remove();
+            // Create video element
+            const video = doc.createElement('video');
+            //video.src = `/videos/${squareY[Math.floor(Math.random() * 9)]}${Math.floor(Math.random() * 17)+1}.mp4`;
+            const position = [squareY[Math.floor(Math.random() * 2)], Math.floor(Math.random() * 2) + 1]
+            video.src = `/videos/${position[0]}${position[1]}.mp4`;
+            video.controls = false;
+            video.muted = false;
+            video.autoplay = true;
+            const wx = window.innerWidth;
+            const wy = window.innerHeight;
+            if (wx / wy < 0.555) { video.width = window.innerWidth; }
+            else { video.height = window.innerHeight; }
+
+            css(video, {
+                'display': 'block',
+                'margin-left': 'auto',
+                'margin-right': 'auto',
+            });
+            target.appendChild(video);
+
+            video.addEventListener('mousedown', function (e) {
+                // Get the target
+                e.target;
+                // Get the bounding rectangle of target
+                const rect = e.target.getBoundingClientRect();
+                const len = rect.right - rect.left;
+                const height = rect.bottom - rect.top;
+
+                // Mouse position
+                const x = (e.clientX - rect.left) / len * 100;
+                const y = (e.clientY - rect.top) / height * 100;
+
+                //turn co-ordinates into square
+                let pos = [];
+                let yindex = Math.floor((y - 68.9844) / 2.45878);
+                if (yindex >= 0 && yindex < 9) {
+                    //pos.push(squareY[yindex])
+                    pos.push(yindex + 1)
+                    let xindex = Math.floor((x - 0.9259) / 5.45278);
+                    if (xindex >= 0 && xindex < 18) { pos.push(xindex + 1) }
+                }
+
+                //calculate score
+                //sample video
+                let points = 100 - 20 * (Math.abs(pos[0] - squareY.indexOf(position[0])) + Math.abs(pos[1] - position[1]));
+                if (!(points > 0)) { points = 0 }
+                score += points;
+                round += 1;
+                alert(`Your points are ${points}, score: ${score}`)
+
+                //repeat game
+                if (round < 2) {
+                    video.remove();
+                    game(doc, tar, score, round);
+                }
+                else {
+                    let bestscore = //({{{ bestscore }}});
+                    if (score > bestscore) {
+                        bestscore = score;
+                    }
+                    $.post('/game/practice', { score: score, bestscore: bestscore });
+                    history.go(0)
+                    console.log('fin');
+                }
+
+            });
+        };
     }
 </script>
