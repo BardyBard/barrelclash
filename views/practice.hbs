@@ -9,6 +9,7 @@
         <a class="btn btn-secondary" href="/" role="button">home</a>
     </div>
 </div>
+
 <div id="target" class="container"></div>
 
 <script>
@@ -33,11 +34,12 @@
         exit.textContent = "Exit";
         exit.className = "btn btn-danger";
         exit.role = "button";
-        exit.href = "/";
+        exit.href = "/game/practice";
         css(exit, {
             'position': 'absolute',
             'right': '30px',
             'top': '15px',
+            'z-index': 1000,
         });
 
         // Include in HTML as child of target
@@ -95,6 +97,10 @@
                 'margin-right': 'auto',
             });
             target.appendChild(video);
+            const videostart = Date.now();
+
+            //pause video after 2 sec
+            setTimeout(() => { video.pause() }, 2700);
 
             video.addEventListener('mousedown', function (e) {
                 // Get the target
@@ -111,7 +117,8 @@
                 //turn co-ordinates into square
                 let pos = [];
                 let yindex = Math.floor((y - 68.9844) / 2.45878);
-                if (yindex >= 0 && yindex < 9) {
+                //maybe do 0?
+                if (yindex >= -3 && yindex < 9) {
                     //pos.push(squareY[yindex])
                     pos.push(yindex + 1)
                     let xindex = Math.floor((x - 0.9259) / 5.45278);
@@ -120,20 +127,20 @@
 
                 //calculate score
                 //sample video
-                let points = 100 - 20 * (Math.abs(pos[0] - squareY.indexOf(position[0])) + Math.abs(pos[1] - position[1]));
+                let points = Math.floor((4000-Date.now()+videostart)/1000*(1000 - 200 * (Math.abs(pos[0] - squareY.indexOf(position[0])) + Math.abs(pos[1] - position[1]))));
                 if (!(points > 0)) { points = 0 }
                 score += points;
                 round += 1;
                 alert(`Your points are ${points}, score: ${score}`)
 
                 //repeat game
-                if (round < 2) {
+                if (round < 5) {
                     video.remove();
                     game(doc, tar, score, round);
                 }
                 else {
-                    let bestscore = //({{{ bestscore }}});
-                    if (score > bestscore) {
+                    let bestscore = parseInt({{{bestscore}}});
+                    if (score > bestscore || !(bestscore)) {
                         bestscore = score;
                     }
                     $.post('/game/practice', { score: score, bestscore: bestscore });
@@ -143,5 +150,9 @@
 
             });
         };
+    }
+
+    function vidpause(video) {
+        video.pause();
     }
 </script>
