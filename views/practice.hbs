@@ -2,6 +2,17 @@
     <div class="text-center mt-5 pt-5">
         <button id="start" type="button" class="btn btn-secondary btn-lg">Start Pracice</button>
     </div>
+    <div class="container mx-auto text-center m-3">
+        <div class="radio" id="5">
+            <label><input type="radio" name="round" value=6 checked>5 Rounds</label>
+        </div>
+        <div class="radio" id="10">
+            <label><input type="radio" name="round" value=11>10 Rounds</label>
+        </div>
+        <div class="radio" id="25">
+            <label><input type="radio" name="round" value=26>25 Rounds</label>
+        </div>
+    </div>
     <div class="card mx-auto m-3 text-white bg-secondary" style="width: 18rem">
         <div class="card-body text-center">Best Score: {{{bestscore}}}<br>Previous Game: {{{score}}}</div>
     </div>
@@ -24,10 +35,12 @@
     //total = 1958
 
     //load data values
-    squareY = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
+    squareY = ["Z", "A", "B", "C", "D", "E", "F", "G", "H", "I"];
+    videoSrc = ["A1.mp4", "A13.mp4", "B2.mp4", "B5.mp4", "B13.mp4", "B15.mp4", "C17.mp4", "D13.mp4", "D14.mp4", "D15.mp4", "D17.mp4", "D18.mp4", "E2.mp4", "E6.mp4", "E13.mp4", "E15.mp4", "F1.mp4", "F15.mp4"]
     console.log();
     //check for game start
     document.getElementById("start").onclick = function (event) {
+        const numRounds = document.querySelector('input[name="round"]:checked').value;
         document.getElementById("container").remove();
         //create exit button
         const exit = document.createElement('a');
@@ -41,14 +54,24 @@
             'top': '15px',
             'z-index': 1000,
         });
+        const scoreDisplay = document.createElement('div');
+        scoreDisplay.textContent = "Score: 0";
+        scoreDisplay.id = "scrDisp"
+        scoreDisplay.className = "card text-white bg-secondary";
+         css(scoreDisplay, {
+            'position': 'absolute',
+            'right': '30px',
+            'top': '60px',
+            'z-index': 1000,
+        });
 
         // Include in HTML as child of target
         const target = document.getElementById('target');
         target.appendChild(exit);
-
+        target.appendChild(scoreDisplay);
         let score = 0;
         let round = 1;
-        game(document, target, score, round);
+        game(document, target, score, round, numRounds);
     }
 
     //function to help apply ccs to elements
@@ -57,7 +80,7 @@
             element.style[property] = style[property];
     }
 
-    function game(doc, tar, score, round) {
+    function game(doc, tar, score, round, numRounds) {
         //create countdown element
         const countdown = doc.createElement('video');
         countdown.src = '/videos/countdown.mp4';
@@ -80,9 +103,15 @@
             countdown.remove();
             // Create video element
             const video = doc.createElement('video');
-            //video.src = `/videos/${squareY[Math.floor(Math.random() * 9)]}${Math.floor(Math.random() * 17)+1}.mp4`;
-            const position = [squareY[Math.floor(Math.random() * 2)], Math.floor(Math.random() * 2) + 1]
-            video.src = `/videos/${position[0]}${position[1]}.mp4`;
+            const chosenClip = videoSrc[Math.floor(Math.random() * (videoSrc.length-1))]
+            let position = [];
+            if (chosenClip.length == 7){
+                position = [chosenClip.charAt(0), parseInt(`${chosenClip.charAt(1)}${chosenClip.charAt(2)}`)]
+            }
+            else {
+                position = [chosenClip.charAt(0), chosenClip.charAt(1)]
+            }
+            video.src = `/videos/${chosenClip}`;
             video.controls = false;
             video.muted = false;
             video.autoplay = true;
@@ -100,9 +129,11 @@
             const videostart = Date.now();
 
             //pause video after 2 sec
-            setTimeout(() => { video.pause() }, 2700);
+            const videoPauseTimer = setTimeout(() => { video.pause() }, 2700);
 
             video.addEventListener('mousedown', function (e) {
+                clearTimeout(videoPauseTimer);
+                video.play();
                 // Get the target
                 e.target;
                 // Get the bounding rectangle of target
@@ -122,33 +153,36 @@
                     //pos.push(squareY[yindex])
                     pos.push(yindex + 1)
                     let xindex = Math.floor((x - 0.9259) / 5.45278);
-                    if (xindex >= 0 && xindex < 18) { pos.push(xindex + 1) }
+                    pos.push(xindex + 1)
                 }
 
                 //calculate score
                 //sample video
-                let points = Math.floor((4000-Date.now()+videostart)/1000*(1000 - 200 * (Math.abs(pos[0] - squareY.indexOf(position[0])) + Math.abs(pos[1] - position[1]))));
+                const respTime = 4000-Date.now()+videostart;
+                let delta = 1000 - 200 *(Math.abs(pos[0] - squareY.indexOf(position[0])) + Math.abs(pos[1] - position[1]));
+                if (delta < 0) {delta = 0};
+                let points = Math.floor(respTime/1000*delta);
                 if (!(points > 0)) { points = 0 }
                 score += points;
+                document.getElementById("scrDisp").textContent = `Score: ${score}\nAvg: ${Math.floor(score/round)}`;
                 round += 1;
-                alert(`Your points are ${points}, score: ${score}`)
-
-                //repeat game
-                if (round < 5) {
-                    video.remove();
-                    game(doc, tar, score, round);
-                }
-                else {
-                    let bestscore = parseInt({{{bestscore}}});
-                    if (score > bestscore || !(bestscore)) {
-                        bestscore = score;
-                    }
-                    $.post('/game/practice', { score: score, bestscore: bestscore });
-                    history.go(0)
-                    console.log('fin');
-                }
-
             });
+            video.onended = function () {
+                //repeat game
+                    if (round < numRounds) {
+                        video.remove();
+                        game(doc, tar, score, round, numRounds);
+                    }
+                    else {
+                        let bestscore = parseInt({{{bestscore}}});
+                        if (score > bestscore || !(bestscore)) {
+                            bestscore = score;
+                        }
+                        $.post('/game/practice', { score: score, bestscore: bestscore });
+                        history.go(0)
+                        console.log('fin');
+                    }
+            };
         };
     }
 
