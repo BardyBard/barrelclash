@@ -1,4 +1,4 @@
-<div id='container' class="container">
+<div id='menu' class="container">
     <div class="text-center mt-5 pt-5">
         <button id="start" type="button" class="btn btn-secondary btn-lg">Start Pracice</button>
     </div>
@@ -41,7 +41,7 @@
     //check for game start
     document.getElementById("start").onclick = function (event) {
         const numRounds = document.querySelector('input[name="round"]:checked').value;
-        document.getElementById("container").remove();
+        document.getElementById("menu").remove();
         //create exit button
         const exit = document.createElement('a');
         exit.textContent = "Exit";
@@ -117,8 +117,8 @@
             video.autoplay = true;
             const wx = window.innerWidth;
             const wy = window.innerHeight;
-            if (wx / wy < 0.555) { video.width = window.innerWidth; }
-            else { video.height = window.innerHeight; }
+            if (wx / wy < 0.555) { video.width = wx; }
+            else { video.height = wy; }
 
             css(video, {
                 'display': 'block',
