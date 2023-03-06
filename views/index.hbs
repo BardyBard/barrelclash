@@ -9,19 +9,13 @@
 
 {{!-- make small cards to navigate website--}}
 <div class="container">
-    <div class="card-deck p-4">
-        <div class="card bg-primary" style="width: 18rem;">
+        <div class="card mx-auto bg-primary" style="width: 18rem;">
             <div class="card-body text-center">
                 <h2 class="card-text">Practice</h2>
+                {{#if bestscore}}
                 <p class="card-text">Best Score: {{{bestscore}}}</p>
+                {{/if}}        
                 <a href="/game/practice" class="stretched-link"></a>
             </div>
         </div>
-        <div class="card bg-primary" style="width: 18rem;">
-            <div class="card-body text-center">
-                <h2 class="card-text">Infinite</h2>
-                <a href="/game/infinite" class="stretched-link"></a>
-            </div>
-        </div>
-    </div>
 </div>
