@@ -12,4 +12,4 @@ This command will install all the dependancies in the project.
 Run to start the server
 node ./start.js
 
-Then connect to localhost://
+Then connect to localhost:3000
