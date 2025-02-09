@@ -1,8 +1,6 @@
 # barrelclash
 
-Project by Alex.
-
-The purpose of barrel clash is to train your goblin barrel detection from Clash Royale.
+The purpose of **barrelclash** is to train your goblin barrel detection from Clash Royale.
 
 To run this project clone it and open up the terminal:
 `npm install`
